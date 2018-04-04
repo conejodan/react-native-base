@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {StatusBar} from 'react-native';
-import { Container, Header, Body, Title, Content, Button, Text } from 'native-base';
+import { Container,Drawer, Header,Right,Left,Icon, Body, Title, Content, Button, Text, List, ListItem } from 'native-base';
 import {Actions} from 'react-native-router-flux';
+import SideBar from './sidebar';
 
 class Dashboard extends Component{
 
@@ -9,27 +10,49 @@ class Dashboard extends Component{
     Actions.push('login');
   }
   
-  sendCotizarNew(){
-    Actions.push('cotizar_new');
+  sendForm(){
+    Actions.push('form');
   }
+  closeDrawer = () => {
+    this.drawer._root.close()
+  };
+  openDrawer = () => {
+    this.drawer._root.open()
+  };
 
     render(){
         return(
-            <Container style={{ marginTop: StatusBar.currentHeight}}>
+          <Drawer
+        ref={(ref) => { this.drawer = ref; }}
+        content={
+          <SideBar />
+      }
+        onClose={() => this.closeDrawer()} >
+      <Container style={{ marginTop: StatusBar.currentHeight}}>
         <Header>
-        <Body style={{ flex: 1,  justifyContent: 'center', alignItems: 'center' }}>
+        <Left>
+            <Button
+              transparent
+              onPress={() => this.openDrawer()}>
+              <Icon name="menu" />
+            </Button>
+          </Left>
+        <Body>
           <Title>Dashboard</Title>
         </Body>
+        <Right>
+        <Button
+              transparent
+              onPress={() => this.sendForm()}>
+              <Icon name="md-add-circle" />
+            </Button>
+          </Right>
       </Header>
       <Content>
-          <Button block onPress={this.sendCotizarNew.bind(this)}>
-            <Text>Realizar Cotizacion</Text>
-          </Button>
-            <Button block onPress={this.onPressButton.bind(this)}>
-            <Text>Salir</Text>
-          </Button>
         </Content>
       </Container>
+      </Drawer>
+            
         );
     }
 }

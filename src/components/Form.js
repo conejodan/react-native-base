@@ -15,7 +15,7 @@ class Cotizar_Create extends Component{
             <Container style={{ marginTop: StatusBar.currentHeight}}>
         <Header>
         <Body style={{ flex: 1,  justifyContent: 'center', alignItems: 'center' }}>
-          <Title>Nueva Cotizacion</Title>
+          <Title>Formulario</Title>
         </Body>
       </Header>
       <Content>

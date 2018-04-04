@@ -39,7 +39,7 @@ class LoginForm extends Component {
       return <Text>Cargando</Text>;
     }  
     return (
-      <Button block onPress={this.onButtonPress.bind(this)}>
+      <Button block onPress={this.onPressButton.bind(this)}>
         <Text>Ingresar</Text>
       </Button>
     );
