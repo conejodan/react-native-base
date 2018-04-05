@@ -10,7 +10,7 @@ const RouterComponent = () => {
         <Scene key="app">
               <Scene key="login" component={LoginForm} title="login"  hideNavBar/>
               <Scene key="dashboard" component={Dashboard} title="dashboard" hideNavBar/>
-              <Scene key="cotizar_new" component={Form} title="form" hideNavBar/>
+              <Scene key="form" component={Form} title="form" hideNavBar/>
         </Scene>
       </Router>
     );
