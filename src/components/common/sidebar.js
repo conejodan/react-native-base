@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Text,
+  Text
 } from 'react-native';
 import {StatusBar} from 'react-native';
 import {Actions} from 'react-native-router-flux';
@@ -10,7 +10,7 @@ import {Content, List, ListItem, Body} from 'native-base';
 export default class Sidebar extends Component {
   render() {
     return (
-        <Content style={{backgroundColor:'#FFFFFF',marginTop: StatusBar.currentHeight}}>
+        <Content style={{backgroundColor:'#F0F0F0', paddingTop: StatusBar.currentHeight}}>
         <List>
             <ListItem>
               <Text>Inicio</Text>
