@@ -63,7 +63,7 @@ class LoginForm extends Component {
         <Header>
           <Body
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Title>Login</Title>
+            <Title>Logiin</Title>
           </Body>
         </Header>
         <Content>

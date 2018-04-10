@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {StatusBar} from 'react-native';
-import {Container, Header,Body,Title,Content,Button,Text} from 'native-base';
 import {Actions} from 'react-native-router-flux';
 import DrawerItem from './common/DrawerItem';
-
+import {Card, CardItem, Text, Item, Label, Input} from 'native-base';
 class Cotizar_Create extends Component{
   
   constructor(props) {
@@ -11,15 +9,23 @@ class Cotizar_Create extends Component{
     console.log("props", props);
   }
 
-  onPressButton(){
-    Actions.push('dashboard');
-  }
   
   render(){
     
     return(
-      <DrawerItem title="Formulario" backstep>
-              
+      <DrawerItem title="Formulario" menu_icon="ios-arrow-back" menu_route={()=> Actions.push('dashboard')}>
+              <Card>
+              <CardItem header>
+              <Text>Formulario</Text>
+            </CardItem>
+            <CardItem>
+              <Item floatingLabel>
+              <Label>Correo</Label>
+              <Input
+              />
+            </Item>
+            </CardItem>
+              </Card>
       </DrawerItem>
         );
   }
