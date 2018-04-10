@@ -72,8 +72,6 @@ class DrawerItem extends Component {
             <Right>
         {this.rightMenuitem()}
         </Right>
-              
-            
           </Header>
           <Content>
             {this.props.children}
