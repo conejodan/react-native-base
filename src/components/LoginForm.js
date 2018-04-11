@@ -12,6 +12,8 @@ import {
   Button,
   Text,
   Label,
+  Card,
+  CardItem
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -39,7 +41,7 @@ class LoginForm extends Component {
       return <Text>Cargando</Text>;
     }  
     return (
-      <Button block onPress={this.onPressButton.bind(this)}>
+      <Button block onPress={this.onPressButton.bind(this)} style={{flex:1}}>
         <Text>Ingresar</Text>
       </Button>
     );
@@ -66,7 +68,8 @@ class LoginForm extends Component {
             <Title>Login</Title>
           </Body>
         </Header>
-        <Content>
+        <Content style={{padding:5}}>
+        <Card>
           <Form>
             <Item floatingLabel>
               <Label>Correo</Label>
@@ -75,17 +78,19 @@ class LoginForm extends Component {
                 value={this.props.email}
               />
             </Item>
-            <Item floatingLabel last>
+            <Item floatingLabel>
               <Label>Password</Label>
               <Input
                 onChangeText={this.onPasswordChange.bind(this)}
                 value={this.props.password}
               />
             </Item>
-
+            <CardItem>
             {this.renderButton()}
+            </CardItem>
             {this.renderError()}
           </Form>
+          </Card>
         </Content>
       </Container>
     );
