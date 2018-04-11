@@ -73,7 +73,7 @@ class DrawerItem extends Component {
         {this.rightMenuitem()}
         </Right>
           </Header>
-          <Content>
+          <Content style={{padding:5}}>
             {this.props.children}
           </Content>
         </Container>
