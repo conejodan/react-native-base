@@ -10,8 +10,9 @@ class Cotizar_Create extends Component {
     this.state = {
       field1: "",
       field2: "",
-      field3_value: "",
-      field3: []
+      field3: "",
+      field4: "",
+      field4_list: []
     };
   }
 
@@ -25,19 +26,19 @@ class Cotizar_Create extends Component {
 
   onPressButton(){
     this.setState({
-      field3: this.state.field3.concat(this.state.field3_value),
-      field3_value: ""
+      field4_list: this.state.field4_list.concat(this.state.field4),
+      field4: ""
     });
   }
 
   deleteRow(index){
     this.setState({
-      field3: this.state.field3.filter((_, i) => i !== index)
+      field4_list: this.state.field4_list.filter((_, i) => i !== index)
     });
   }
 
   listItems(){
-    const row = this.state.field3.map((val, index)=>(
+    const row = this.state.field4_list.map((val, index)=>(
       <ListItem key={index}>
       <Body>
       <Text>{index} - {val}</Text>
@@ -95,8 +96,7 @@ class Cotizar_Create extends Component {
                   placeholder="Field 3 - Select"
                   mode="dropdown"
                   selectedValue={this.state.field3}
-                  onValueChange={this.onValueChange.bind(this)}
-
+                  onValueChange={(value)=>this.changeField('field3', value)}
                 >
                   <Picker.Item label="Wallet" value="0" />
                   <Picker.Item label="ATM Card" value="1" />
@@ -111,10 +111,10 @@ class Cotizar_Create extends Component {
           
           <CardItem>
             <Item floatingLabel style={{flex:1}}>
-              <Label>Field 2 - {this.state.field3_value}</Label>
+              <Label>Field 4 - {this.state.field4}</Label>
               <Input
-                onChangeText={value => this.changeField('field3_value', value)}
-                value={this.state.field3_value}
+                onChangeText={value => this.changeField('field4', value)}
+                value={this.state.field4}
               />
             </Item>
             <Button transparent onPress={this.onPressButton.bind(this)} >
