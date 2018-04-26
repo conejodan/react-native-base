@@ -15,7 +15,7 @@ export default class Sidebar extends Component {
             <ListItem button onPress={() => Actions.push('dashboard')}>
               <Text>Inicio</Text>
             </ListItem>
-            <ListItem button onPress={() => Actions.push('form')}>
+            <ListItem button onPress={() => Actions.push('formulario')}>
               <Text>Form</Text>
             </ListItem>
             <ListItem button onPress={() => Actions.push('login')}>

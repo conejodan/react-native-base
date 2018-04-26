@@ -18,7 +18,7 @@ export default class App extends Component {
     const that = this;
     setTimeout(function(){
       that.setState({loaded:true});
-    },3000);
+    },1000);
     
   }
 

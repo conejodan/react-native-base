@@ -22,6 +22,7 @@ export default class Application extends Component {
   
   render() {
     const store = createStore(reducers,{},applyMiddleware(ReduxThunk));
+    //const store = createStore(reducers,{});
     return (
         <Provider store={store}>
             <Router />

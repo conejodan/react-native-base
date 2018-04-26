@@ -41,7 +41,7 @@ class LoginForm extends Component {
       return <Text>Cargando</Text>;
     }  
     return (
-      <Button block onPress={this.onPressButton.bind(this)} style={{flex:1}}>
+      <Button block onPress={this.onButtonPress.bind(this)} style={{flex:1}}>
         <Text>Ingresar</Text>
       </Button>
     );

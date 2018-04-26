@@ -2,7 +2,7 @@ import React from 'react';
 import {Router, Scene} from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import Dashboard from './components/Dashboard';
-import Form from './components/Form';
+import Formulario from './components/Formulario';
 
 const RouterComponent = () => {
     return (
@@ -10,7 +10,7 @@ const RouterComponent = () => {
         <Scene key="app">
               <Scene key="login" component={LoginForm} title="login"  hideNavBar/>
               <Scene key="dashboard" component={Dashboard} title="dashboard" hideNavBar/>
-              <Scene key="form" component={Form} title="form" hideNavBar/>
+              <Scene key="formulario" component={Formulario} title="formulario" hideNavBar/>
         </Scene>
       </Router>
     );

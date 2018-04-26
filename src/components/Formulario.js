@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import DrawerItem from './common/DrawerItem';
-import { Card, CardItem, Text, Item, Label,Body, Input, Picker, Content, Form, Button, Icon, List, ListItem, Right } from 'native-base';
-class Cotizar_Create extends Component {
+import {StatusBar} from 'react-native';
+//import DrawerItem from './DrawerItem';
+import {Drawer,Container,Header, Card, CardItem,Left,Title, Text, Item, Label,Body, Input, Picker, Content, Form, Button, Icon, List, ListItem, Right } from 'native-base';
+import SideBar from './sidebar';
+
+class Formulario extends Component {
 
   constructor(props) {
     super(props);
@@ -57,12 +60,38 @@ class Cotizar_Create extends Component {
         </List>
     );
   }
+  closeDrawer = () => {
+    this.drawer._root.close();
+  };
+  openDrawer = () => {
+    this.drawer._root.open();
+  };
 
   render() {
 
     return (
-      <DrawerItem title="Formulario" menu_icon="ios-arrow-back" menu_route={() => Actions.push('dashboard')}>
-        <Card style={{flex:1}}> 
+      <Drawer
+        ref={ref => {
+          this.drawer = ref;
+        }}
+        content={<SideBar />}
+        onClose={() => this.closeDrawer()}>
+              
+              <Container style={{ marginTop: StatusBar.currentHeight }}>
+                <Header>
+                <Left>
+                  <Button transparent onPress={this.openDrawer}>
+                    <Icon name={"menu"} />
+                  </Button>
+                </Left>
+                  <Body>
+                    <Title>Form</Title>
+                  </Body>
+                  <Right>
+              </Right>
+                </Header>
+                <Content style={{padding:6, paddingBottom:20}} padder>
+                <Card style={{flex:1}}> 
           <CardItem header>
             <Text>Formulario</Text>
           </CardItem>
@@ -123,11 +152,13 @@ class Cotizar_Create extends Component {
           </CardItem>
           
           <CardItem>
-          {this.listItems()}
+          
           </CardItem>
         </Card>
-      </DrawerItem>
+                </Content>
+              </Container>
+            </Drawer>
     );
   }
 }
-export default Cotizar_Create
+export default Formulario;
