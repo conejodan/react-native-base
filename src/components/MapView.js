@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
 import {Drawer, Icon, Button, Container, Header, Body, Left, Right, Title, Content } from 'native-base';
-import {Actions} from 'react-native-router-flux';
-//import Drawer from './DrawerItem';
+import { View, Text } from 'native-base';
 import SideBar from './sidebar';
 import {StatusBar} from 'react-native';
 
-class Dashboard extends Component{
+class MapView extends Component{
 
     constructor(props) {
         super(props);
         console.log("props", props);
       }
 
-      closeDrawer = () => {
+    closeDrawer = () => {
         this.drawer._root.close();
       };
       openDrawer = () => {
@@ -40,11 +39,6 @@ class Dashboard extends Component{
               <Title>Dashboard</Title>
             </Body>
             <Right>
-            <Button
-              transparent
-              onPress={() => Actions.push('formulario')}>
-              <Icon name="md-add-circle" />
-            </Button>
         </Right>
           </Header>
           <Content style={{padding:6, paddingBottom:20}} padder>
@@ -56,4 +50,4 @@ class Dashboard extends Component{
     }
 }
 
-export default Dashboard;
+export default MapView;

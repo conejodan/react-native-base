@@ -20,6 +20,15 @@ import { connect } from 'react-redux';
 import { emailChanged, passwordChange, loginUser } from '../actions';
 
 class LoginForm extends Component {
+
+  componentWillMount(){
+    console.log("Cargando LoginForm");
+    console.log(this.props.user);
+    if(this.props.user){
+      Actions.push('dashboard');  
+    }
+  }
+
   onPressButton() {
     Actions.push('dashboard');
   }
@@ -41,7 +50,7 @@ class LoginForm extends Component {
       return <Text>Cargando</Text>;
     }  
     return (
-      <Button block onPress={this.onButtonPress.bind(this)} style={{flex:1}}>
+      <Button block onPress={this.onPressButton.bind(this)} style={{flex:1}}>
         <Text>Ingresar</Text>
       </Button>
     );
