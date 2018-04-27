@@ -9,10 +9,11 @@ const RouterComponent = () => {
     return (
       <Router>
         <Scene key="app">
+              <Scene key="mapview" component={MapView} title="mapview" hideNavBar/>
               <Scene key="login" component={LoginForm} title="login"  hideNavBar/>
               <Scene key="dashboard" component={Dashboard} title="dashboard" hideNavBar/>
               <Scene key="formulario" component={Formulario} title="formulario" hideNavBar/>
-              <Scene key="mapview" component={MapView} title="mapview" hideNavBar/>
+              
         </Scene>
       </Router>
     );

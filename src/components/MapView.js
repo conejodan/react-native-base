@@ -1,15 +1,58 @@
 import React, {Component} from 'react';
-import {Drawer, Icon, Button, Container, Header, Body, Left, Right, Title, Content } from 'native-base';
+import {Drawer, Icon, Button, Container, Header, Body, Left, Right, Title, Content, Card } from 'native-base';
 import { View, Text } from 'native-base';
 import SideBar from './sidebar';
-import {StatusBar} from 'react-native';
+import {StatusBar, Dimensions} from 'react-native';
+import { MapView, Marker,Location, Permissions } from 'expo';
 
-class MapView extends Component{
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height-135;
+
+
+class MapView2 extends Component{
+  state = {
+    mapRegion: null,
+    hasLocationPermissions: false,
+    locationResult: null,
+    ubicarposicion: true
+  };
 
     constructor(props) {
         super(props);
         console.log("props", props);
+        
       }
+
+      componentDidMount() {
+        this._getLocationAsync();
+      }
+    
+      _handleMapRegionChange = mapRegion => {
+        console.log(mapRegion);
+        this.setState({ mapRegion });
+      };
+    
+      _getLocationAsync = async () => {
+       let { status } = await Permissions.askAsync(Permissions.LOCATION);
+       if (status !== 'granted') {
+         this.setState({
+           locationResult: 'Permission to access location was denied',
+         });
+       } else {
+         this.setState({ hasLocationPermissions: true });
+       }
+    if(this.state.ubicarposicion){
+      let location = await Location.getCurrentPositionAsync({});
+       this.setState({ locationResult: JSON.stringify(location) });
+       
+       // Center the map on the location we just fetched.
+        this.setState({
+          mapRegion: { latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.001, longitudeDelta: 0.001 },
+          ubicarposicion: false
+        });
+    }
+       
+      };
 
     closeDrawer = () => {
         this.drawer._root.close();
@@ -18,6 +61,30 @@ class MapView extends Component{
         this.drawer._root.open();
       };
 
+      onRegionChange(region) {
+        console.log("Region", region);
+        this.setState({ mapstate:region });
+      }
+
+      showMap(){
+        if(this.state.mapRegion){
+          return(
+            <MapView
+        style={{ flex: 1}}
+        region={this.state.mapRegion}
+        onRegionChange={this._handleMapRegionChange}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
+        >
+       
+      </MapView>
+          );
+        }
+      }
+
+      // <View style={{flex:0, height:windowHeight-135,zIndex: 0}}>
+      //     {this.showMap()}
+      // </View>
 
     render(){
         return(
@@ -36,13 +103,29 @@ class MapView extends Component{
                   </Button>
           </Left>
             <Body>
-              <Title>Dashboard</Title>
+              <Title>Mapa</Title>
             </Body>
             <Right>
         </Right>
           </Header>
-          <Content style={{padding:6, paddingBottom:20}} padder>
-            
+          <Content style={{flex:1, backgroundColor:'blue'}}>
+           <View style={{flex:1, height:windowHeight,zIndex: 0}}>
+           {this.showMap()}
+       </View>
+      
+      <View style={{ flex:1 }}>
+      <Card>
+      <Text>Loading</Text>
+      </Card>
+      </View>
+      <View style={{ flex:5, }}>
+      </View>
+      <View style={{ flex:1, }}>
+      <Card>
+      <Text>Loading</Text>
+      </Card>
+      </View>
+      
           </Content>
         </Container>
       </Drawer>
@@ -50,4 +133,4 @@ class MapView extends Component{
     }
 }
 
-export default MapView;
+export default MapView2;
