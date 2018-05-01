@@ -14,7 +14,35 @@ class MapView2 extends Component{
     mapRegion: null,
     hasLocationPermissions: false,
     locationResult: null,
-    ubicarposicion: true
+    ubicarposicion: true,
+    markers: [{
+        title: 'hello1',
+        coordinates: {
+            latitude:18.0241876,
+            longitude:-92.898832
+        },
+      },
+      {
+        title: 'hello2',
+        coordinates: {
+            latitude:18.0238005,
+            longitude:-92.8981547
+        },  
+      },
+      {
+        title: 'hello3',
+        coordinates: {
+            latitude:18.0234166,
+            longitude:-92.8983834
+        },  
+      },
+      {
+        title: 'hello4',
+        coordinates: {
+            latitude:18.0235072,
+            longitude:-92.8994764
+        },  
+      }]
   };
 
     constructor(props) {
@@ -29,7 +57,7 @@ class MapView2 extends Component{
     
       _handleMapRegionChange = mapRegion => {
         console.log(mapRegion);
-        this.setState({ mapRegion });
+        //this.setState({ mapRegion });
       };
     
       _getLocationAsync = async () => {
@@ -47,7 +75,12 @@ class MapView2 extends Component{
        
        // Center the map on the location we just fetched.
         this.setState({
-          mapRegion: { latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.001, longitudeDelta: 0.001 },
+          mapRegion: { 
+              latitude: location.coords.latitude, 
+              longitude: location.coords.longitude, 
+              latitudeDelta: 0.006, 
+              longitudeDelta: 0.006 
+            },
           ubicarposicion: false
         });
     }
@@ -76,6 +109,13 @@ class MapView2 extends Component{
         showsUserLocation={true}
         showsMyLocationButton={true}
         >
+        {this.state.markers.map(marker => (
+            <MapView.Marker 
+            key={marker.title}
+            coordinate={marker.coordinates}
+            title={marker.title}
+            />
+        ))}
        
       </MapView>
           );
@@ -108,21 +148,21 @@ class MapView2 extends Component{
             <Right>
         </Right>
           </Header>
-          <Content style={{flex:1, backgroundColor:'blue'}}>
-           <View style={{flex:1, height:windowHeight,zIndex: 0}}>
+          <Content style={{ }}>
+           <View style={{ height:windowHeight}}>
            {this.showMap()}
        </View>
       
-      <View style={{ flex:1 }}>
+      <View style={{  position: 'absolute',flexDirection:"column"}}>
       <Card>
-      <Text>Loading</Text>
+      <Text>Loading2</Text>
       </Card>
       </View>
       <View style={{ flex:5, }}>
       </View>
-      <View style={{ flex:1, }}>
+      <View style={{ alignSelf:'flex-end', position: 'absolute',flexDirection:"column"}}>
       <Card>
-      <Text>Loading</Text>
+      <Text>Loading4</Text>
       </Card>
       </View>
       
