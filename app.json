@@ -23,10 +23,11 @@
       ]
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.conejodancorp.conejodan"
     },
     "android": {
-      "package": "com.prueba.prueba"
+      "package": "com.conejodancorp.conejodan"
     }
   }
 }
