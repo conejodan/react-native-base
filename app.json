@@ -27,6 +27,7 @@
       "bundleIdentifier": "com.conejodancorp.conejodan"
     },
     "android": {
+      "config":{"googleMaps":{"apiKey": "AIzaSyBWxkmxLwmwPousoV5RMTFo73rpfyMk0C0"}},
       "package": "com.conejodancorp.conejodan"
     }
   }

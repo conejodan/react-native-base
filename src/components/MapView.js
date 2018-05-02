@@ -3,7 +3,8 @@ import {Drawer, Icon, Button, Container, Header, Body, Left, Right, Title, Conte
 import { View, Text } from 'native-base';
 import SideBar from './sidebar';
 import {StatusBar, Dimensions} from 'react-native';
-import { MapView, Marker,Location, Permissions } from 'expo';
+import { MapView, Marker,Polygon,Location, Permissions } from 'expo';
+import {computeDistanceBetween, computeArea, LatLng} from 'spherical-geometry-js'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = (Dimensions.get('window').height/2)-80;
@@ -15,32 +16,33 @@ class MapView2 extends Component{
     hasLocationPermissions: false,
     locationResult: null,
     ubicarposicion: true,
-    markers: [{
-        title: 'hello1',
-        coordinates: {
-            latitude:17.992612,
-            longitude:-92.9340187
-        }
-      },
-      {
-        title: 'hello2',
-        coordinates: {
-            latitude:17.9913084,
-            longitude:-92.9329137
-        }  
-      },
-      {
-        title: 'hello3',
-        coordinates: {
-            latitude:17.9912344,
-            longitude:-92.9348368
-        }  
-      }
+    markers: [
+      // {
+      //   title: 'hello1',
+      //   coordinates: {
+      //       latitude:17.9939823,
+      //       longitude:-92.934135
+      //   }
+      // },
+      // {
+      //   title: 'hello2',
+      //   coordinates: {
+      //       latitude:17.989731,
+      //       longitude:-92.9321741
+      //   }  
+      // },
+      // {
+      //   title: 'hello3',
+      //   coordinates: {
+      //       latitude:17.9921249,
+      //       longitude:-92.9391312
+      //   }  
+      // }
       // ,{
       //   title: 'hello4',
       //   coordinates: {
-      //       latitude:18.0235072,
-      //       longitude:-92.8994764
+      //       latitude:17.9920885,
+      //       longitude:-92.9350539
       //   }  
       // }
     ]
@@ -51,43 +53,42 @@ class MapView2 extends Component{
         console.log("props", props);
         
       }
-      
-      polygonArea(points) 
-        { 
-          console.log("Puntos ", points);
-          var area = 0;         // Accumulates area in the loop
-          var j = points.length-1;  // The last vertex is the 'previous' one to the first
-
-          for (var i=0; i<points.length; i++)
-            { 
-              var pointJ = points[j].coordinates;
-              var pointI = points[i].coordinates;
-              console.log("Punto J: ", pointJ);
-              console.log("Punto I: ", pointI);
-              console.log("Area" + area );
-              //console.log("Area1: " + pointJ.latitude+ "," +pointI.latitude );
-              //console.log("Area2: " + pointJ.longitude +","+pointI.longitude);
-              console.log("Area1: " + pointI.latitude+ "," +pointI.longitude );
-              console.log("Area2: " + pointJ.latitude +","+pointJ.longitude)
-              area = area +  (pointJ.latitude*pointI.latitude) + (pointJ.longitude*pointI.longitude); 
-              j = i;  //j is previous vertex to i
-            }
-          return (area/2).toFixed(2);
-        }
-
 
       calculateArea(){
+        if(this.state.markers.length < 4){
+          return "Faltan " + (4 - this.state.markers.length) + " puntos"
+        }
+        if(this.state.markers.length > 4){
+          return "Hay mas de 4 puntos"
+        }
         console.log("Calculate Area");
-        var result = this.polygonArea(this.state.markers);
-        console.log("Calculo Area: " + result);
-        return "Area";
+        var result = 0;
+        var last_distance = 0;
+        for (var i = 0; i < this.state.markers.length-1; i++) { 
+          var distance = 0;
+          distance = this.getDistance(this.state.markers[i].coordinates,this.state.markers[i+1].coordinates);
+          console.log("distance", distance);
+          console.log("last_distance", last_distance);
+          if(last_distance == 0){
+            last_distance = distance;
+          }else{
+            console.log("result", result);
+            result += ((distance * last_distance)/2);
+            last_distance = 0;
+          }
+        }
+        
+        console.log(result);
+        return result;
       }
 
       calculatePerimeter(){
+        //console.log("calculatePerimeter");
         var result = 0;
         for (var i = 0; i < this.state.markers.length-1; i++) { 
           result += this.getDistance(this.state.markers[i].coordinates,this.state.markers[i+1].coordinates);
         }
+        //console.log(result.toFixed(2));
         return result.toFixed(2);
       }
 
@@ -116,6 +117,19 @@ class MapView2 extends Component{
     
       _handleMapRegionChange = mapRegion => {
         console.log(mapRegion);
+        this.setState({
+          mapNow:{
+                latitude:mapRegion.latitude,
+                longitude:mapRegion.longitude,
+            },
+            mapRegion: { 
+              latitude:mapRegion.latitude,
+              longitude:mapRegion.longitude,
+              latitudeDelta: mapRegion.latitudeDelta, 
+              longitudeDelta: mapRegion.longitudeDelta
+            }
+          }
+        );
         //this.setState({ mapRegion });
       };
     
@@ -128,9 +142,17 @@ class MapView2 extends Component{
        } else {
          this.setState({ hasLocationPermissions: true });
        }
+       let location = await Location.getCurrentPositionAsync({});
+       //this.setState({  });
+       this.setState({
+        locationResult: JSON.stringify(location),
+        mapNow: { 
+            latitude: location.coords.latitude, 
+            longitude: location.coords.longitude
+          }
+      });
     if(this.state.ubicarposicion){
-      let location = await Location.getCurrentPositionAsync({});
-       this.setState({ locationResult: JSON.stringify(location) });
+      
        
        // Center the map on the location we just fetched.
         this.setState({
@@ -153,32 +175,58 @@ class MapView2 extends Component{
         this.drawer._root.open();
       };
 
-      onRegionChange(region) {
-        console.log("Region", region);
-        this.setState({ mapstate:region });
-      }
-
       showMap(){
         if(this.state.mapRegion){
+          var polygon = this.state.markers.map((marker)=>{
+            var {latitude, longitude} = marker.coordinates;
+            return {latitude:latitude,longitude:longitude};
+          });
           return(
             <MapView
         style={{ flex: 1}}
         region={this.state.mapRegion}
-        onRegionChange={this._handleMapRegionChange}
+        onRegionChangeComplete={this._handleMapRegionChange}
         showsUserLocation={true}
         showsMyLocationButton={true}
         >
+        <MapView.Polygon coordinates={polygon} />
+        <MapView.Marker color={"blue"}
+            coordinate={this.state.mapNow}
+            title={"Punto"}
+            />
         {this.state.markers.map(marker => (
-            <MapView.Marker 
+            <MapView.Marker color={"green"}
             key={marker.title}
             coordinate={marker.coordinates}
             title={marker.title}
             />
+            
         ))}
        
       </MapView>
           );
         }
+      }
+
+      onPressButton(){
+        console.log("Presionando Boton");
+        this.setState({
+          markers:this.state.markers.concat(
+          {
+            title: 'hello'+this.state.mapNow.latitude,
+            coordinates: {
+                latitude:this.state.mapNow.latitude,
+                longitude:this.state.mapNow.longitude
+            } 
+          }
+        )});
+      }
+
+      onDeleteMarkers(){
+        console.log("DeleteMarkers");
+        this.setState({
+          markers:[]
+      });
       }
 
       // <View style={{flex:0, height:windowHeight-135,zIndex: 0}}>
@@ -220,6 +268,16 @@ class MapView2 extends Component{
       <View>
         <Card>
           <Text>Area: {this.calculateArea()}</Text>
+        </Card>
+      </View>
+      <View>
+        <Card>
+        <Button block onPress={this.onDeleteMarkers.bind(this)} style={{flex:1}}>
+          <Text>Eliminar puntos</Text>
+        </Button>
+          <Button block onPress={this.onPressButton.bind(this)} style={{flex:1}}>
+          <Text>Agregar Punto</Text>
+        </Button>
         </Card>
       </View>
       
