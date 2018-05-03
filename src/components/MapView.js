@@ -9,6 +9,7 @@ import {computeDistanceBetween, computeArea, LatLng} from 'spherical-geometry-js
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = (Dimensions.get('window').height/2)-80;
 
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeInterval: 3000 };
 
 class MapView2 extends Component{
   state = {
@@ -113,15 +114,27 @@ class MapView2 extends Component{
 
       componentDidMount() {
         this._getLocationAsync();
+        Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+      }
+
+      locationChanged = (location) => {
+        console.log("LocationChanged");
+        this.setState({
+          locationResult: JSON.stringify(location),
+          mapNow: { 
+              latitude: location.coords.latitude, 
+              longitude: location.coords.longitude
+            }
+        });
       }
     
       _handleMapRegionChange = mapRegion => {
         console.log(mapRegion);
         this.setState({
-          mapNow:{
-                latitude:mapRegion.latitude,
-                longitude:mapRegion.longitude,
-            },
+          // mapNow:{
+          //       latitude:mapRegion.latitude,
+          //       longitude:mapRegion.longitude,
+          //   },
             mapRegion: { 
               latitude:mapRegion.latitude,
               longitude:mapRegion.longitude,
@@ -132,7 +145,8 @@ class MapView2 extends Component{
         );
         //this.setState({ mapRegion });
       };
-    
+
+      
       _getLocationAsync = async () => {
        let { status } = await Permissions.askAsync(Permissions.LOCATION);
        if (status !== 'granted') {
@@ -143,6 +157,7 @@ class MapView2 extends Component{
          this.setState({ hasLocationPermissions: true });
        }
        let location = await Location.getCurrentPositionAsync({});
+       console.log("Location>>",location)
        //this.setState({  });
        this.setState({
         locationResult: JSON.stringify(location),
