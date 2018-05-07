@@ -4,12 +4,10 @@ import { View, Text } from 'native-base';
 import SideBar from './sidebar';
 import {StatusBar, Dimensions} from 'react-native';
 import { MapView, Marker,Polygon,Location, Permissions } from 'expo';
-import {computeDistanceBetween, computeArea, LatLng} from 'spherical-geometry-js'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = (Dimensions.get('window').height/2)-80;
 
-const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeInterval: 3000 };
 
 class MapView2 extends Component{
   state = {
@@ -55,6 +53,23 @@ class MapView2 extends Component{
         
       }
 
+      componentDidMount() {
+        setInterval(()=>{
+          this._getLocationAsync();
+        },2000);
+      }
+
+      locationChanged = (location) => {
+        console.log("LocationChanged");
+        this.setState({
+          locationResult: JSON.stringify(location),
+          mapNow: { 
+              latitude: location.coords.latitude, 
+              longitude: location.coords.longitude
+            }
+        });
+      }
+
       calculateArea(){
         if(this.state.markers.length < 4){
           return "Faltan " + (4 - this.state.markers.length) + " puntos"
@@ -62,18 +77,18 @@ class MapView2 extends Component{
         if(this.state.markers.length > 4){
           return "Hay mas de 4 puntos"
         }
-        console.log("Calculate Area");
+        //console.log("Calculate Area");
         var result = 0;
         var last_distance = 0;
         for (var i = 0; i < this.state.markers.length-1; i++) { 
           var distance = 0;
           distance = this.getDistance(this.state.markers[i].coordinates,this.state.markers[i+1].coordinates);
-          console.log("distance", distance);
-          console.log("last_distance", last_distance);
+          //console.log("distance", distance);
+          //console.log("last_distance", last_distance);
           if(last_distance == 0){
             last_distance = distance;
           }else{
-            console.log("result", result);
+            //console.log("result", result);
             result += ((distance * last_distance)/2);
             last_distance = 0;
           }
@@ -108,25 +123,9 @@ class MapView2 extends Component{
           Math.sin(dLong / 2) * Math.sin(dLong / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c;
-        console.log("Distancia: ", d);
+        //console.log("Distancia: ", d);
         return d; // returns the distance in meter
       };
-
-      componentDidMount() {
-        this._getLocationAsync();
-        Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
-      }
-
-      locationChanged = (location) => {
-        console.log("LocationChanged");
-        this.setState({
-          locationResult: JSON.stringify(location),
-          mapNow: { 
-              latitude: location.coords.latitude, 
-              longitude: location.coords.longitude
-            }
-        });
-      }
     
       _handleMapRegionChange = mapRegion => {
         console.log(mapRegion);
@@ -159,6 +158,7 @@ class MapView2 extends Component{
        let location = await Location.getCurrentPositionAsync({});
        console.log("Location>>",location)
        //this.setState({  });
+
        this.setState({
         locationResult: JSON.stringify(location),
         mapNow: { 
@@ -204,7 +204,7 @@ class MapView2 extends Component{
         showsUserLocation={true}
         showsMyLocationButton={true}
         >
-        <MapView.Polygon coordinates={polygon} />
+        {/* <MapView.Polygon coordinates={polygon} /> */}
         <MapView.Marker color={"blue"}
             coordinate={this.state.mapNow}
             title={"Punto"}
